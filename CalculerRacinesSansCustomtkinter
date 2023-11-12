@@ -1,0 +1,69 @@
+from tkinter import Tk, Label, Entry, Button, Text, messagebox, CENTER
+from math import sqrt
+def format_coefficient(coefficient, variable):
+    if coefficient < 0:
+        return f"{int(coefficient)}{variable}"
+    else:
+        return f"+{int(coefficient)}{variable}"
+def on_validate_input(P):
+    return all(c.isdigit() or c in '+-' for c in P)
+def on_enter_key(event):
+    calculer_racines()
+def calculer_racines():
+    try:
+        a = float(a_entry.get())
+        b = float(b_entry.get())
+        c = float(c_entry.get())
+        D = b**2 - 4 * a * c
+        texte_resultat.config(state="normal")
+        texte_resultat.delete("1.0", "end")
+        texte_resultat.insert("1.0", f"f(x) = {int(a)}x² {format_coefficient(b, 'x')} {int(c)}\n")
+        texte_resultat.insert("end", f"a = {int(a)}, b = {int(b)}, c = {int(c)}\n")
+        texte_resultat.insert("end", f"Δ = {D}\n")
+        if D > 0:
+            texte_resultat.insert("end", "Il y a deux racines :\n")
+            x1 = ((-b - sqrt(D)) / (2 * a))
+            x11 = f"x1 = (-{int(b)} - √{D}) / {2 * a}" if b >= 0 else f"x1 = ({-int(b)} - √{D}) / {2 * a}"
+            texte_resultat.insert("end", f"{x11} = {x1}\n")
+            x2 = ((-b + sqrt(D)) / (2 * a))
+            x22 = f"x2 = (-{int(b)} + √{D}) / {2 * a}" if b >= 0 else f"x2 = ({-int(b)} + √{D}) / {2 * a}"
+            texte_resultat.insert("end", f"{x22} = {x2}\n")
+        elif D == 0:
+            texte_resultat.insert("end", "Il y a une racine :\n")
+            x0 = -b / (2 * a)
+            texte_resultat.insert("end", f"x0 = {x0}\n")
+        else:
+            texte_resultat.insert("end", "Il n'y a pas de racine réelle\n")
+        texte_resultat.config(state="disabled")
+    except ValueError:
+        messagebox.showerror("Erreur", "Veuillez saisir des valeurs numériques valides pour a, b et c")
+fenetre = Tk()
+fenetre.title("Racines d'un polynôme du 2nd degré")
+font_size = 14
+font = ("Arial", font_size)
+title_label = Label(fenetre, text="Calcul des racines d'un polynôme", font=("Arial", 18))
+title_label.pack(pady=20)
+input_frame = Label(fenetre)
+input_frame.pack()
+a_label = Label(input_frame, text="Entrez a :", font=font)
+a_label.grid(row=0, column=0, padx=10, pady=10)
+a_entry = Entry(input_frame, font=font)
+a_entry.grid(row=0, column=1, padx=10, pady=10)
+a_entry.config(validate="key", validatecommand=(a_entry.register(on_validate_input), '%P'))
+b_label = Label(input_frame, text="Entrez b :", font=font)
+b_label.grid(row=1, column=0, padx=10, pady=10)
+b_entry = Entry(input_frame, font=font)
+b_entry.grid(row=1, column=1, padx=10, pady=10)
+b_entry.config(validate="key", validatecommand=(b_entry.register(on_validate_input), '%P'))
+c_label = Label(input_frame, text="Entrez c :", font=font)
+c_label.grid(row=2, column=0, padx=10, pady=10)
+c_entry = Entry(input_frame, font=font)
+c_entry.grid(row=2, column=1, padx=10, pady=10)
+c_entry.config(validate="key", validatecommand=(c_entry.register(on_validate_input), '%P'))
+calculer_button = Button(fenetre, text="Calculer les racines", command=calculer_racines, font=font, bg="#4CAF50", fg="white")
+calculer_button.pack(pady=20)
+texte_resultat = Text(fenetre, wrap="none", font=font, bg="#ECECEC", relief="sunken")
+texte_resultat.pack(padx=20, pady=20)
+texte_resultat.config(state="disabled")
+fenetre.bind("<Return>", lambda event=None: calculer_racines())
+fenetre.mainloop()
