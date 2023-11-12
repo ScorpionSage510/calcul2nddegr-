@@ -1,0 +1,82 @@
+from tkinter import messagebox
+from customtkinter import *
+from math import *
+app = CTk()
+app.geometry("900x400")
+set_appearance_mode("dark")
+def on_enter_key(event):
+    calculer_racines()
+label = CTkLabel(master=app, text="x² +", font=("Roboto", 20), text_color="#FFFFFF")
+label.place(relx=0.45, rely=0.15, anchor="center")
+label = CTkLabel(master=app, text="x +", font=("Roboto", 20), text_color="#FFFFFF")
+label.place(relx=0.55, rely=0.15, anchor="center")
+entry_a = CTkEntry(master=app, placeholder_text="a", width=50,
+                text_color="#FFFFFF")
+entry_a.place(relx=0.4, rely=0.15, anchor="center")
+entry_b = CTkEntry(master=app, placeholder_text="b", width=50,
+                text_color="#FFFFFF")
+entry_b.place(relx=0.5, rely=0.15, anchor="center")
+entry_c = CTkEntry(master=app, placeholder_text="c", width=50,
+                text_color="#FFFFFF")
+entry_c.place(relx=0.6, rely=0.15, anchor="center")
+def calculer_racines():
+    try:
+        a = float(entry_a.get())
+        b = float(entry_b.get())
+        c = float(entry_c.get())
+        D = b**2 - 4 * a * c
+        if D > 0:
+            x1 = ((-b - sqrt(D)) / (2 * a))
+            x11 = f"x1 = (-{int(b)} - √{D}) / {2 * a}" if b >= 0 else f"x1 = ({-int(b)} - √{D}) / {2 * a}"
+
+            x2 = ((-b + sqrt(D)) / (2 * a))
+            x22 = f"x2 = (-{int(b)} + √{D}) / {2 * a}" if b >= 0 else f"x2 = ({-int(b)} + √{D}) / {2 * a}"
+            if b<0 :
+                b=sqrt(b**2)
+                if c<0:
+                    Résultat = f"f(x)={a}x²-{b}x{c}\nΔ={D}>0\nIl y a deux racines :\nx1=({b} + √{D}) / {2 * a}={x1}\nx2=({b} - √{D}) / {2 * a}={x2}"
+                else :
+                    Résultat = f"f(x)={a}x²-{b}x+{c}\nΔ={D}>0\nIl y a deux racines :\nx1=({b} + √{D}) / {2 * a}={x1}\nx2=({b} - √{D}) / {2 * a}={x2}"
+            else :
+                if c<0 :
+                    Résultat = f"f(x)={a}x²+{b}x{c}\nΔ={D}>0\nIl y a deux racines :\nx1=(-{b} + √{D}) / {2 * a}={x1}\nx2=(-{b} - √{D}) / {2 * a}={x2}"
+                else :
+                    Résultat = f"f(x)={a}x²+{b}x+{c}\nΔ={D}>0\nIl y a deux racines :\nx1=(-{b} + √{D}) / {2 * a}={x1}\nx2=(-{b} - √{D}) / {2 * a}={x2}"
+
+        elif D == 0:
+            x0 = -b / (2 * a)
+            if b<0 :
+                if c<0:
+                    Résultat = f"f(x)={a}x²{b}x{c}\nΔ={D}\nIl y a une racine :\nx0={x0}"
+                else :
+                    Résultat = f"f(x)={a}x²{b}x+{c}\nΔ={D}\nIl y a une racine :\nx0={x0}"
+            else :
+                if c<0 :
+                    Résultat = f"f(x)={a}x²+{b}x{c}\nΔ={D}\nIl y a une racine :\nx0={x0}"
+                else :
+                    Résultat = f"f(x)={a}x²+{b}x+{c}\nΔ={D}\nIl y a une racine :\nx0={x0}"
+
+        else:
+            if b<0 :
+                if c<0:
+                    Résultat = f"f(x)={a}x²{b}x{c}\nΔ={D}<0\nIl n'y a pas de racine réelle"
+                else :
+                    Résultat = f"f(x)={a}x²{b}x+{c}\nΔ={D}<0\nIl n'y a pas de racine réelle"
+            else :
+                if c<0 :
+                    Résultat = f"f(x)={a}x²+{b}x{c}\nΔ={D}<0\nIl n'y a pas de racine réelle"
+                else :
+                    Résultat = f"f(x)={a}x²+{b}x+{c}\nΔ={D}<0\nIl n'y a pas de racine réelle"
+    except ValueError:
+        messagebox.showerror("Erreur", "Veuillez saisir des valeurs numériques valides pour a, b et c")
+    textbox = CTkTextbox(master=app, fg_color="#475263", border_color="#7d9ed4", border_width=2, width=600, height=220, font=("Roboto", 16), text_color="#FFFFFF")
+    textbox.insert("0.0", Résultat)
+    textbox.grid(row = 0, column= 0)
+    textbox.place(relx=0.5, rely=0.6, anchor="center")
+btn = CTkButton(master=app, text="Calculer les racines", corner_radius=32,fg_color="#1d63dc", command=calculer_racines)
+btn.place(relx=0.5, rely=0.25, anchor="center")
+frame1 = CTkFrame(master=app, fg_color="#1d63dc", corner_radius=10)
+CTkLabel(master=frame1, text="Calcul des racines d'un polynôme du second degré", font=("Roboto", 15), text_color="#FFFFFF", justify="center").pack(expand=True, pady=(7, 7), padx=(50, 50))
+frame1.place(relx=0.5, rely=0.045, anchor="center")
+app.bind("<Return>", lambda event=None: calculer_racines())
+app.mainloop()
